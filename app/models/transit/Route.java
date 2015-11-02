@@ -144,6 +144,9 @@ public class Route extends Model implements Cloneable, Serializable {
 		if(gtfsRouteId != null && !gtfsRouteId.isEmpty())
 			return gtfsRouteId;
 		else
+			id = id.replace(":","");
+            id = id.replace("/","");
+            id = id.replace(" ","");
 			return id;
 	}
 

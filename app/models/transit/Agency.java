@@ -46,8 +46,9 @@ public class Agency extends Model implements Cloneable, Serializable, Comparable
     */
     
     public Agency(com.conveyal.gtfs.model.Agency agency) {
-        this.gtfsAgencyId = agency.agency_id;
-        this.name = agency.agency_name;
+
+        this.gtfsAgencyId = agency.agency_id.replace(":", "");
+        this.name = agency.agency_name.replace(":", "");
         this.url = agency.agency_url != null ? agency.agency_url.toString() : null;
         this.timezone = agency.agency_timezone;
         this.lang = agency.agency_lang;
@@ -56,7 +57,7 @@ public class Agency extends Model implements Cloneable, Serializable, Comparable
     }
     
     public Agency(String gtfsAgencyId, String name, String url, String timezone, String lang, String phone) {
-        this.gtfsAgencyId = gtfsAgencyId;
+        this.gtfsAgencyId = gtfsAgencyId.replace(":", "");
         this.name = name;
         this.url = url;
         this.timezone = timezone;
@@ -73,8 +74,8 @@ public class Agency extends Model implements Cloneable, Serializable, Comparable
 		if(this.gtfsAgencyId != null && !this.gtfsAgencyId.isEmpty())
 			gtfsAgencyId = this.gtfsAgencyId;
 		
-		ret.agency_id = gtfsAgencyId;
-		ret.agency_name = name;
+		ret.agency_id = gtfsAgencyId.replace(":", "");
+		ret.agency_name = name.replace(":", "");
 		try {
 			ret.agency_url = new URL(url);
 		} catch (MalformedURLException e) {

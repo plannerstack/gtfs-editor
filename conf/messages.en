@@ -114,6 +114,7 @@ shared.button.remove=Remove
 shared.button.duplicate=Duplicate
 
 shared.export-data-btn=Export
+shared.export-data-btn-all=Export All (auto frequency)
 
 shared.button.merge=Merge
 

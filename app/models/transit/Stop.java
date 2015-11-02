@@ -212,6 +212,9 @@ public class Stop extends Model implements Cloneable, Serializable {
 		if(gtfsStopId != null && !gtfsStopId.isEmpty())
 			return gtfsStopId;
 		else
+            id = id.replace(":","");
+            id = id.replace("/","");
+            id = id.replace(" ","");
 			return "STOP_" + id;
 	}
 	

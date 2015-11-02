@@ -13,6 +13,7 @@ GET     /get_token								Secure.get_token
 GET     /snapshots                              Application.snapshots
 
 GET     /export/gtfs                      		Application.exportGtfs
+GET     /export/creategtfs/all                  Application.createAlGtfs
 GET     /export/creategtfs                      Application.createGtfs
 
 GET     /export/gis                      		Application.exportGis

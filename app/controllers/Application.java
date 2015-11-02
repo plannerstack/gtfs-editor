@@ -6,6 +6,7 @@ import datastore.GlobalTx;
 import datastore.VersionedDataStore;
 import jobs.GisExport;
 import jobs.ProcessGtfsSnapshotExport;
+import jobs.ProcessGtfsSnapshotExportAll;
 import jobs.ProcessGtfsSnapshotMerge;
 import models.Account;
 import models.OAuthToken;
@@ -325,6 +326,41 @@ public class Application extends Controller {
 
         render();
     }
+
+
+    /**
+     * Build a GTFS file with the specified agency IDs.
+     * 
+     * @param agencySelect
+     * @param calendarFrom
+     * @param calendarTo
+     */
+    public static void createAlGtfs(Long calendarFrom, Long calendarTo) {
+        // reasonable defaults: now to 2 months from now (more or less)
+        
+        LocalDate startDate;
+        LocalDate endDate;
+        
+        // export all agencies
+        GlobalTx gtx = VersionedDataStore.getGlobalTx();
+        NavigableSet<String> agencySelect = gtx.agencies.keySet();
+
+        if (calendarFrom == null)
+            startDate = new LocalDate().minusDays(2);
+        else
+            startDate = new LocalDate(calendarFrom, DateTimeZone.UTC);
+        
+        if (calendarTo == null)
+            endDate = new LocalDate().plusMonths(2);
+        else
+            endDate = new LocalDate(calendarTo, DateTimeZone.UTC);
+        
+        File out = new File(Play.configuration.getProperty("application.publicDataDirectory"), "gtfs_" + nextExportId.incrementAndGet() + ".zip");
+        
+        new ProcessGtfsSnapshotExport(agencySelect, out, startDate, endDate, false).run();
+        
+        redirect(Play.configuration.getProperty("application.appBase") + "/public/data/"  + out.getName());
+    }
     
     /**
      * Build a GTFS file with the specified agency IDs.
@@ -333,12 +369,16 @@ public class Application extends Controller {
      * @param calendarFrom
      * @param calendarTo
      */
-    public static void createGtfs(List<String> agencySelect, Long calendarFrom, Long calendarTo) {
+    public static void createGtfs(List<String> _agencySelect, Long calendarFrom, Long calendarTo) {
         // reasonable defaults: now to 2 months from now (more or less)
     	
     	LocalDate startDate;
     	LocalDate endDate;
     	
+        // For now always export all agency-ids
+        GlobalTx gtx = VersionedDataStore.getGlobalTx();
+        NavigableSet<String> agencySelect = gtx.agencies.keySet();
+
         if (calendarFrom == null)
             startDate = new LocalDate().minusDays(2);
         else
